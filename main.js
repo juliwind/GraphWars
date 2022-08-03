@@ -14,7 +14,7 @@ inputGraph.addEventListener("keypress", function (event) {
 })
 //---
 
-s
+
 function checkFunc(func) {
     let error = false;
 
@@ -53,15 +53,17 @@ function replaceFormation(func) {
     return func;
 }
 
-
+//(3+x)*(2+x)
 function placeMissingChars(func) {
+    console.log("pMC");
     let text_array = func.split("");
     let numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     let operators = ["+", "-", "*", "/", "^"]
-    let others = ["(", ")", "x", "s", "l", "a", "c", "t", "e", "p"]
+    let others = ["(", "x", "s", "l", "a", "c", "t", "e", "p"]
     for (let i = 0; i < text_array.length - 1; i++) {
         for (let j = 0; j < numbers.length; j++) {
             if (text_array[i] == numbers[j]) {
+                console.log("i = number", i, text_array);
                 for (let k = 0; k < others.length; k++) {
                     if (text_array[i + 1] == others[k]) {
                         text_array.splice(i + 1, 0, "*");
@@ -70,24 +72,35 @@ function placeMissingChars(func) {
             }
         }
         if (text_array[i] == ")" && i != text_array.length - 1) {
-            operators.push("(");
+            console.log("i = )", i, text_array);
+            operators.push(")");
+            let is_operator = false;
             for (let j = 0; j < operators.length; j++) {
                 if (text_array[i + 1] == operators[j]) {
-                    text_array.splice(i + 1, 0, "*");
+                    is_operator = true;
                 }
+            }
+            if (!is_operator) {
+                text_array.splice(i + 1, 0, "*");
             }
             operators.pop();
         }
         if (text_array[i] == "(" && i != 0) {
-            operators.push(")");
+            console.log("i = (", i, text_array);
+            operators.push("(");
+            let is_operator = false;
             for (let j = 0; j < operators.length; j++) {
                 if (text_array[i - 1] == operators[j]) {
-                    text_array.splice(i - 1, 0, "*");
+                    is_operator = true;
                 }
+            }
+            if (!is_operator) {
+                text_array.splice(i - 1, 0, "*");
             }
             operators.pop();
         }
     }
+    return text_array.join("");
 }
 
 
@@ -157,6 +170,7 @@ function checkChars(func) {
 function calcFunc(input_x, func) {
     str_x = input_x.toString();
     term = func.replaceAll("x", str_x);
+    console.log(term);
     return eval(term);
 }
 
