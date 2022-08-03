@@ -7,15 +7,19 @@ let func;
 inputGraph.addEventListener("keypress", function (event) {
     if (event.key == "Enter") {
         event.preventDefault();
+
         func = inputGraph.value;
         checkFunc(func);
     }
 })
 //---
 
+s
 function checkFunc(func) {
     let error = false;
+
     func.replaceAll(" ", "");
+
     if (!checkBrackets(func)) {
         alert("The Brackets are wrong placed! :(");
         error = true;
@@ -24,8 +28,10 @@ function checkFunc(func) {
         alert("There is something wrong written or not avaiable");
         error = true;
     }
+    func = placeMissingChars(func);
     func = replaceFormation(func);
-    if (!error) drawLine(100, 500, func);
+
+    if (!error) drawLine(1, 400, func);
 }
 
 
@@ -48,10 +54,47 @@ function replaceFormation(func) {
 }
 
 
+function placeMissingChars(func) {
+    let text_array = func.split("");
+    let numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    let operators = ["+", "-", "*", "/", "^"]
+    let others = ["(", ")", "x", "s", "l", "a", "c", "t", "e", "p"]
+    for (let i = 0; i < text_array.length - 1; i++) {
+        for (let j = 0; j < numbers.length; j++) {
+            if (text_array[i] == numbers[j]) {
+                for (let k = 0; k < others.length; k++) {
+                    if (text_array[i + 1] == others[k]) {
+                        text_array.splice(i + 1, 0, "*");
+                    }
+                }
+            }
+        }
+        if (text_array[i] == ")" && i != text_array.length - 1) {
+            operators.push("(");
+            for (let j = 0; j < operators.length; j++) {
+                if (text_array[i + 1] == operators[j]) {
+                    text_array.splice(i + 1, 0, "*");
+                }
+            }
+            operators.pop();
+        }
+        if (text_array[i] == "(" && i != 0) {
+            operators.push(")");
+            for (let j = 0; j < operators.length; j++) {
+                if (text_array[i - 1] == operators[j]) {
+                    text_array.splice(i - 1, 0, "*");
+                }
+            }
+            operators.pop();
+        }
+    }
+}
+
+
 function checkBrackets(func) {
     let text_array = func.split("");
     let idx = 0;
-    for (i = 0; i < text_array.length; i++) {
+    for (let i = 0; i < text_array.length; i++) {
         if (text_array[i] == "(") {
             idx++;
         }
@@ -109,8 +152,7 @@ function checkChars(func) {
     }
     return false;
 }
-// preprocessing finished!
-// canvas = 1000x600
+
 
 function calcFunc(input_x, func) {
     str_x = input_x.toString();
@@ -118,18 +160,23 @@ function calcFunc(input_x, func) {
     return eval(term);
 }
 
+// canvas = 750x450
+//17.5 - 18 :)
 function drawLine(startX, startY, func) {
     let y_axis = calcFunc(0, func);
     let pos_x = startX;
     let pos_y = startY;
     let calc_x = 1;
+
     while (pos_x >= 0 && pos_x <= canvas.width && pos_y >= 0 && pos_y <= canvas.height) {
-        let curr_y = canvas.height - (calcFunc(calc_x, func) * 40) + y_axis - startX
+        let curr_y = canvas.height - (calcFunc(calc_x, func) * 1) + y_axis - (canvas.height - startY);
+
         ctx.beginPath();
         ctx.moveTo(pos_x, pos_y);
-        ctx.lineTo((pos_x + 40), curr_y);
+        ctx.lineTo((pos_x + 1), curr_y);
         ctx.stroke();
-        pos_x += 40;
+
+        pos_x += 1;
         calc_x += 1;
         pos_y = curr_y;
     }
@@ -156,7 +203,8 @@ function drawLine(startX, startY, func) {
         pos_y = curr_y;
     }
 }
-*/
+
 // x-25 25
 //y -15 15
 
+*/
