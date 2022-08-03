@@ -25,7 +25,7 @@ function checkFunc(func) {
         error = true;
     }
     func = replaceFormation(func);
-    if (!error) drawLine(100, 600, func);
+    if (!error) drawLine(100, 500, func);
 }
 
 
@@ -118,7 +118,27 @@ function calcFunc(input_x, func) {
     return eval(term);
 }
 
+function drawLine(startX, startY, func) {
+    let y_axis = calcFunc(0, func);
+    let pos_x = startX;
+    let pos_y = startY;
+    let calc_x = 1;
+    while (pos_x >= 0 && pos_x <= canvas.width && pos_y >= 0 && pos_y <= canvas.height) {
+        let curr_y = canvas.height - (calcFunc(calc_x, func) * 40) + y_axis - startX
+        ctx.beginPath();
+        ctx.moveTo(pos_x, pos_y);
+        ctx.lineTo((pos_x + 40), curr_y);
+        ctx.stroke();
+        pos_x += 40;
+        calc_x += 1;
+        pos_y = curr_y;
+    }
+}
 
+
+
+/*
+//Kurven besser, nicht nah ran gezoomt
 function drawLine(startX, startY, func) {
     console.log(func);
     let y_axis = calcFunc(0, func);
@@ -127,7 +147,6 @@ function drawLine(startX, startY, func) {
     let calc_x = 1;
     while (pos_x >= 0 && pos_x <= canvas.width && pos_y >= 0 && pos_y <= canvas.height) {
         let curr_y = canvas.height - calcFunc(calc_x, func) + y_axis - startX;
-        //console.log("curr_x", curr_y, "heiught", canvas.height, "result function", calcFunc(calc_x, func), "y_axis", y_axis, "startX", startX);
         ctx.beginPath();
         ctx.moveTo(pos_x, pos_y);
         ctx.lineTo(pos_x + 1, curr_y);
@@ -137,7 +156,7 @@ function drawLine(startX, startY, func) {
         pos_y = curr_y;
     }
 }
-
+*/
 // x-25 25
 //y -15 15
 
