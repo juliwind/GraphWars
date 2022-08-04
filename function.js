@@ -1,8 +1,17 @@
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+let saveCircle_doc = document.getElementById("saveCircle");
+let trail_doc = document.getElementById("trail");
 
-let inputGraph = document.getElementById("inputGraph");
 let func;
+let inputGraph = document.getElementById("inputGraph");
+
+class Trail {
+    constructor(x1, y1, x2, y2) {
+        this.x1 = x1;
+        this.y1 = y1;
+        this.x2 = x2;
+        this.y2 = y2;
+    }
+}
 
 inputGraph.addEventListener("keypress", function (event) {
     if (event.key == "Enter") {
@@ -213,15 +222,38 @@ function draw(calc_x, pos_x, pos_y, startY, y_axis, func) {
     ctx.moveTo(pos_x, pos_y);
     ctx.lineTo((pos_x + 1), curr_y);
     ctx.stroke();
-    console.log(pos_x, pos_y, curr_y, y_axis)
 
     pos_x += 1;
     calc_x += 1 / 15;
     pos_y = curr_y;
 
+    circles = get_Circles();
+    for (i = 0; i < circles.length; i++) {
+        if (euclideanDistance(pos_x, pos_y, circles[i].x, circles[i].y) <= circles[i].r) {
+            console.log("test");
+            let cs_touched = false;
+            for (j = 0; j < saveCircles.length; j++) {
+                if (euclideanDistance(pos_x, pos_y, saveCircles[j].x, saveCircles[j].y) <= saveCircles[j].r) {
+                    cs_touched = true;
+                }
+            }
+            if (!cs_touched) {
+                explode(pos_x, pos_y);
+                return;
+            }
+            cs_touched = false;
+        }
+    }
+
     if (pos_x >= 0 && pos_x <= canvas.width && pos_y >= 0 && pos_y <= canvas.height) {
         setTimeout(() => draw(calc_x, pos_x, pos_y, startY, y_axis, func), 10);
     }
+}
+
+function explode(x, y) {
+    let sc = new SaveCircle(x, y);
+    sc.draw();
+    sc.appendToList();
 }
 
 
