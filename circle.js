@@ -37,6 +37,6 @@ function initCircles(x, y, r) {
         circles[i].draw();
     }
 }
-function get_Circles() {
+function getCircles() {
     return circles;
 }

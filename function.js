@@ -1,18 +1,8 @@
 let saveCircle_doc = document.getElementById("saveCircle");
 let trail_doc = document.getElementById("trail");
-
+let player_doc = document.getElementById("player");
 let func;
 let inputGraph = document.getElementById("inputGraph");
-
-
-inputGraph.addEventListener("keypress", function (event) {
-    if (event.key == "Enter") {
-        event.preventDefault();
-
-        func = inputGraph.value;
-        checkFunc(func);
-    }
-})
 //---
 
 
@@ -32,8 +22,14 @@ function checkFunc(func) {
     func = placeMissingChars(func);
     func = replaceFormation(func);
 
-    //if (!error) drawLine(100, 350, func);
-    if (!error) draw(0, 100, 350, 350, calcFunc(0, func), func);
+    let curr_player = players[getCurrPlayerIdx()];
+    //console.log(getCurrPlayerIdx())
+    if (curr_player.team == 1) {
+        if (!error) draw(0, curr_player.x + 32, curr_player.y + 16, curr_player.y + 16, calcFunc(0, func), func, curr_player.team, curr_player, []);
+    }
+    if (curr_player.team == 2) {
+        if (!error) draw(0, curr_player.x, curr_player.y + 16, curr_player.y + 16, calcFunc(0, func), func, curr_player.team, curr_player, []);
+    }
 }
 
 
@@ -206,27 +202,34 @@ function calcFunc(input_x, func) {
 }
 
 
-function draw(calc_x, pos_x, pos_y, startY, y_axis, func) {
+function draw(calc_x, pos_x, pos_y, startY, y_axis, func, team, player, playersHit) {
 
     let curr_y = canvas.height - ((calcFunc(calc_x, func) - y_axis) * 15) - (canvas.height - startY);
+    if (team == 1) {
+        ctx.beginPath();
+        ctx.moveTo(pos_x, pos_y);
+        ctx.lineTo((pos_x + 1), curr_y);
+        ctx.stroke();
 
-    ctx.beginPath();
-    ctx.moveTo(pos_x, pos_y);
-    ctx.lineTo((pos_x + 1), curr_y);
-    ctx.stroke();
+        pos_x += 1;
+        calc_x += 1 / 15;
+        pos_y = curr_y;
+    }
+    if (team == 2) {
+        ctx.beginPath();
+        ctx.moveTo(pos_x, pos_y);
+        ctx.lineTo((pos_x - 1), curr_y);
+        ctx.stroke();
 
-    let t = new Trail(pos_x, pos_y, pos_x + 1, curr_y);
-    t.appendToList();
-
-    pos_x += 1;
-    calc_x += 1 / 15;
-    pos_y = curr_y;
+        pos_x -= 1;
+        calc_x += 1 / 15;
+        pos_y = curr_y;
+    }
 
 
-    circles = get_Circles();
+    circles = getCircles();
     for (i = 0; i < circles.length; i++) {
         if (euclideanDistance(pos_x, pos_y, circles[i].x, circles[i].y) <= circles[i].r) {
-            console.log("test");
             let cs_touched = false;
             for (j = 0; j < saveCircles.length; j++) {
                 if (euclideanDistance(pos_x, pos_y, saveCircles[j].x, saveCircles[j].y) <= saveCircles[j].r) {
@@ -235,15 +238,48 @@ function draw(calc_x, pos_x, pos_y, startY, y_axis, func) {
             }
             if (!cs_touched) {
                 explode(pos_x, pos_y);
-                deleteTrail();
+                deleteLine();
+                rotatePlayer();
                 return;
             }
             cs_touched = false;
         }
     }
-
+    console.log("s")
+    let players = getPlayers();
+    let alreadyHit = false;
+    for (let i = 0; i < players.length; i++) {
+        if (JSON.stringify(players[i]) !== JSON.stringify(player)) {
+            if (euclideanDistance(pos_x, pos_y, players[i].x + 16, players[i].y + 16) <= 17) {
+                for (let j = 0; j < playersHit.length; j++) {
+                    if (JSON.stringify(players[i]) === JSON.stringify(playersHit[j])) {
+                        console.log("3")
+                        console.log(playersHit)
+                        alreadyHit = true;
+                        console.log("4")
+                    }
+                    console.log("5")
+                }
+                console.log("6")
+                if (!alreadyHit) {
+                    //players[i].img = null;
+                    playersHit.push(players[i]);
+                    players[i].isDead = true;
+                    ctx.fillStyle = "white";
+                    ctx.beginPath();
+                    ctx.arc(players[i].x + 16, players[i].y + 16, 17, 0, 2 * Math.PI, false);
+                    ctx.fill();
+                    ctx.fillStyle = "black";
+                }
+            }
+        }
+    }
     if (pos_x >= 0 && pos_x <= canvas.width && pos_y >= 0 && pos_y <= canvas.height) {
-        setTimeout(() => draw(calc_x, pos_x, pos_y, startY, y_axis, func), 10);
+        setTimeout(() => draw(calc_x, pos_x, pos_y, startY, y_axis, func, team, player, playersHit), 10);
+    }
+    else {
+        deleteLine();
+        rotatePlayer();
     }
 }
 
@@ -253,17 +289,25 @@ function explode(x, y) {
     sc.appendToList();
 }
 
-function deleteTrail() {
-    let trails = getTrails();
-    for (i = 0; i < trails.length; i++) {
-        ctx.beginPath();
-        ctx.moveTo(trails[i].x1, trails[i].y1);
-        ctx.lineTo(trails[i].x2, trails[i].y2);
-        ctx.strokeStyle = "white";
-        ctx.stroke();
-        ctx.strokeStyle = "black";
+function deleteLine() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    let circles = getCircles();
+    let save_circles = getSaveCircles();
+
+    for (let i = 0; i < circles.length; i++) {
+        circles[i].draw();
     }
-    clearTrails();
+
+    for (let i = 0; i < save_circles.length; i++) {
+        save_circles[i].draw();
+    }
+
+    for (let i = 0; i < players.length; i++) {
+        if (players[i].isDead == false) {
+            players[i].draw();
+        }
+    }
 
 }
 
