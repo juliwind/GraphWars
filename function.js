@@ -4,14 +4,6 @@ let trail_doc = document.getElementById("trail");
 let func;
 let inputGraph = document.getElementById("inputGraph");
 
-class Trail {
-    constructor(x1, y1, x2, y2) {
-        this.x1 = x1;
-        this.y1 = y1;
-        this.x2 = x2;
-        this.y2 = y2;
-    }
-}
 
 inputGraph.addEventListener("keypress", function (event) {
     if (event.key == "Enter") {
@@ -223,9 +215,13 @@ function draw(calc_x, pos_x, pos_y, startY, y_axis, func) {
     ctx.lineTo((pos_x + 1), curr_y);
     ctx.stroke();
 
+    let t = new Trail(pos_x, pos_y, pos_x + 1, curr_y);
+    t.appendToList();
+
     pos_x += 1;
     calc_x += 1 / 15;
     pos_y = curr_y;
+
 
     circles = get_Circles();
     for (i = 0; i < circles.length; i++) {
@@ -239,6 +235,7 @@ function draw(calc_x, pos_x, pos_y, startY, y_axis, func) {
             }
             if (!cs_touched) {
                 explode(pos_x, pos_y);
+                deleteTrail();
                 return;
             }
             cs_touched = false;
@@ -254,6 +251,20 @@ function explode(x, y) {
     let sc = new SaveCircle(x, y);
     sc.draw();
     sc.appendToList();
+}
+
+function deleteTrail() {
+    let trails = getTrails();
+    for (i = 0; i < trails.length; i++) {
+        ctx.beginPath();
+        ctx.moveTo(trails[i].x1, trails[i].y1);
+        ctx.lineTo(trails[i].x2, trails[i].y2);
+        ctx.strokeStyle = "white";
+        ctx.stroke();
+        ctx.strokeStyle = "black";
+    }
+    clearTrails();
+
 }
 
 
