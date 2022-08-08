@@ -16,14 +16,13 @@ class Player {
     }
 
     draw() {
-        if (this.team == 1) {
+        if (this.x < canvas.width / 2) {
             let img = new Image();
             img.src = "rcs/player_links.png";
             this.img = img;
-
             ctx.drawImage(img, this.x, this.y);
         }
-        if (this.team == 2) {
+        if (this.x > canvas.width / 2) {
             let img = new Image();
             img.src = "rcs/player_rechts.png";
             this.img = img;
@@ -99,8 +98,7 @@ function getCurrPlayerIdx() {
     }
 }
 
-function rotatePlayer() {
-    console.log("davor", player_round)
+function rotatePlayerRound() {
     if (player_round[player_round.length - 1] == 1) {
         player_round[player_round.length - 1] = 0;
         player_round[0] = 1;
@@ -113,9 +111,24 @@ function rotatePlayer() {
             }
         }
     }
-    console.log("danach", player_round)
 }
 
 function getPlayers() {
     return players;
+}
+
+
+function checkWin() {
+    let team_1_alive = false;
+    let team_2_alive = false;
+    for (let i = 0; i < players.length; i++) {
+        if (players[i].team == 1 && !players[i].isDead) {
+            team_1_alive = true
+        }
+        if (players[i].team == 2 && !players[i].isDead) {
+            team_2_alive = true
+        }
+    }
+    if (!team_1_alive) alert("Team 2 won!");
+    if (!team_2_alive) alert("Team 1 won!");
 }

@@ -23,13 +23,8 @@ function checkFunc(func) {
     func = replaceFormation(func);
 
     let curr_player = players[getCurrPlayerIdx()];
-    //console.log(getCurrPlayerIdx())
-    if (curr_player.team == 1) {
-        if (!error) draw(0, curr_player.x + 32, curr_player.y + 16, curr_player.y + 16, calcFunc(0, func), func, curr_player.team, curr_player, []);
-    }
-    if (curr_player.team == 2) {
-        if (!error) draw(0, curr_player.x, curr_player.y + 16, curr_player.y + 16, calcFunc(0, func), func, curr_player.team, curr_player, []);
-    }
+
+    if (!error) draw(0, curr_player.x + 32, curr_player.y + 16, curr_player.y + 16, calcFunc(0, func), func, curr_player.team, curr_player, []);
 }
 
 
@@ -205,27 +200,15 @@ function calcFunc(input_x, func) {
 function draw(calc_x, pos_x, pos_y, startY, y_axis, func, team, player, playersHit) {
 
     let curr_y = canvas.height - ((calcFunc(calc_x, func) - y_axis) * 15) - (canvas.height - startY);
-    if (team == 1) {
-        ctx.beginPath();
-        ctx.moveTo(pos_x, pos_y);
-        ctx.lineTo((pos_x + 1), curr_y);
-        ctx.stroke();
 
-        pos_x += 1;
-        calc_x += 1 / 15;
-        pos_y = curr_y;
-    }
-    if (team == 2) {
-        ctx.beginPath();
-        ctx.moveTo(pos_x, pos_y);
-        ctx.lineTo((pos_x - 1), curr_y);
-        ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(pos_x, pos_y);
+    ctx.lineTo((pos_x + 1), curr_y);
+    ctx.stroke();
 
-        pos_x -= 1;
-        calc_x += 1 / 15;
-        pos_y = curr_y;
-    }
-
+    pos_x += 1;
+    calc_x += 1 / 15;
+    pos_y = curr_y;
 
     circles = getCircles();
     for (i = 0; i < circles.length; i++) {
@@ -239,13 +222,14 @@ function draw(calc_x, pos_x, pos_y, startY, y_axis, func, team, player, playersH
             if (!cs_touched) {
                 explode(pos_x, pos_y);
                 deleteLine();
-                rotatePlayer();
+                rotatePlayerRound();
+                mirror_screen();
+                checkWin();
                 return;
             }
             cs_touched = false;
         }
     }
-    console.log("s")
     let players = getPlayers();
     let alreadyHit = false;
     for (let i = 0; i < players.length; i++) {
@@ -253,14 +237,9 @@ function draw(calc_x, pos_x, pos_y, startY, y_axis, func, team, player, playersH
             if (euclideanDistance(pos_x, pos_y, players[i].x + 16, players[i].y + 16) <= 17) {
                 for (let j = 0; j < playersHit.length; j++) {
                     if (JSON.stringify(players[i]) === JSON.stringify(playersHit[j])) {
-                        console.log("3")
-                        console.log(playersHit)
                         alreadyHit = true;
-                        console.log("4")
                     }
-                    console.log("5")
                 }
-                console.log("6")
                 if (!alreadyHit) {
                     //players[i].img = null;
                     playersHit.push(players[i]);
@@ -279,7 +258,9 @@ function draw(calc_x, pos_x, pos_y, startY, y_axis, func, team, player, playersH
     }
     else {
         deleteLine();
-        rotatePlayer();
+        rotatePlayerRound();
+        mirror_screen();
+        checkWin();
     }
 }
 
