@@ -12,12 +12,20 @@ inputGraph.addEventListener("keypress", function (event) {
     }
 })
 
+function submitFire() {
+    func = inputGraph.value;
+    checkFunc(func);
+}
+
 function mirror_screen() {
     let mid = canvas.width / 2;
     let circles = getCircles();
     let players = getPlayers();
     let saveCircles = getSaveCircles();
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "rgb(0, 49, 83)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "black"
     for (let i = 0; i < circles.length; i++) {
         x = circles[i].x;
         y = circles[i].y;

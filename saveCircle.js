@@ -9,7 +9,7 @@ class SaveCircle {
 
     draw() {
         ctx.beginPath();
-        ctx.fillStyle = "white";
+        ctx.fillStyle = "rgb(0, 49, 83)";
         ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
         ctx.fill();
     }

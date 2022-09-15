@@ -23,6 +23,7 @@ function checkFunc(func) {
     func = replaceFormation(func);
 
     let curr_player = players[getCurrPlayerIdx()];
+    console.log(func);
 
     if (!error) draw(0, curr_player.x + 32, curr_player.y + 16, curr_player.y + 16, calcFunc(0, func), func, curr_player.team, curr_player, []);
 }
@@ -99,6 +100,16 @@ function placeMissingChars(func) {
                 text_array.splice(i, 0, "*");
             }
             operators.pop();
+        }
+        if (text_array[i] == "x" && i != text_array.length - 1) {
+            for (let j = 0; j < numbers.length; j++) {
+                if (text_array[i + 1] == numbers[j]) {
+                    let curr_i = text_array[i];
+                    text_array[i] = text_array[i + 1];
+                    text_array[i + 1] = curr_i;
+                }
+            }
+
         }
     }
     return text_array.join("");
@@ -244,7 +255,7 @@ function draw(calc_x, pos_x, pos_y, startY, y_axis, func, team, player, playersH
                     //players[i].img = null;
                     playersHit.push(players[i]);
                     players[i].isDead = true;
-                    ctx.fillStyle = "white";
+                    ctx.fillStyle = "rgb(0, 49, 83)";
                     ctx.beginPath();
                     ctx.arc(players[i].x + 16, players[i].y + 16, 17, 0, 2 * Math.PI, false);
                     ctx.fill();
@@ -271,7 +282,12 @@ function explode(x, y) {
 }
 
 function deleteLine() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "rgb(0, 49, 83)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "black"
 
     let circles = getCircles();
     let save_circles = getSaveCircles();
@@ -293,12 +309,5 @@ function deleteLine() {
 }
 
 
-
-
-//Kurven besser, nicht nah ran gezoomt
-
-
-// x-25 25
-//y -15 15
 /*
 */
