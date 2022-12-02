@@ -82,7 +82,6 @@ function initPlayers(team1_size, team2_size) {
         players[i].draw();
     }
     for (let i = 0; i < players.length; i++) {
-        console.log(i)
         player_round.push(0);
     }
     player_round[0] = 1
@@ -90,7 +89,6 @@ function initPlayers(team1_size, team2_size) {
 
 
 function getCurrPlayerIdx() {
-    console.log(player_round)
     for (i = 0; i < player_round.length; i++) {
         if (player_round[i] == 1) {
             return i;
@@ -131,4 +129,29 @@ function checkWin() {
     }
     if (!team_1_alive) alert("Team 2 won!");
     if (!team_2_alive) alert("Team 1 won!");
+}
+
+function startShooting(func) {
+    idx = 1;
+    img = new Image()
+    img.src = "rcs/player_shooting.png"
+    img.onload = drawFrame(idx);
+    function drawFrame(idx) {
+        src_newImg = idx * 1000;
+        resetScreen(false);
+        //console.log(img, x, 0, 500, 222, players[getCurrPlayerIdx()].x, players[getCurrPlayerIdx()].y, 500, 222)
+        //console.log("x", players[getCurrPlayerIdx()].x, "y", players[getCurrPlayerIdx()].y, "idx", idx)
+        //ctx.drawImage(img, src_x, 0, 1000, 445, players[getCurrPlayerIdx()].x, players[getCurrPlayerIdx()].y, 320, 320);
+        console.log(img, src_newImg / 2 + 223, 95, 1000, 224, players[getCurrPlayerIdx()].x, players[getCurrPlayerIdx()].y, 1000, 224)
+        ctx.drawImage(img, src_newImg / 2 + 223, 95, 1000, 224, players[getCurrPlayerIdx()].x, players[getCurrPlayerIdx()].y, 1000, 224)
+        idx++;
+        if (idx < 36) {
+            setTimeout(() => drawFrame(idx), 1000);
+        }
+        else {
+            resetScreen(true);
+            checkFunc(func);
+        }
+    }
+
 }

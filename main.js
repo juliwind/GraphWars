@@ -8,13 +8,13 @@ inputGraph.addEventListener("keypress", function (event) {
         event.preventDefault();
 
         func = inputGraph.value;
-        checkFunc(func);
+        startShooting(func);
     }
 })
 
 function submitFire() {
     func = inputGraph.value;
-    checkFunc(func);
+    startShooting(func);
 }
 
 function mirror_screen() {

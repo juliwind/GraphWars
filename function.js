@@ -23,7 +23,6 @@ function checkFunc(func) {
     func = replaceFormation(func);
 
     let curr_player = players[getCurrPlayerIdx()];
-    console.log(func);
 
     if (!error) draw(0, curr_player.x + 32, curr_player.y + 16, curr_player.y + 16, calcFunc(0, func), func, curr_player.team, curr_player, []);
 }
@@ -31,11 +30,9 @@ function checkFunc(func) {
 
 function replaceFormation(func) {
     func = func.replaceAll("^", "**");
-    func = func.replaceAll("e", "Math.E");
     func = func.replaceAll("pi", "Math.PI");
     func = func.replaceAll("ln", "Math.log");
     func = func.replaceAll("abs", "Math.abs");
-    func = func.replaceAll("exp", "Math.exp");
     func = func.replaceAll("log", "Math.log");
     func = func.replaceAll("atan", "Math.atan");
     func = func.replaceAll("sqrt", "Math.sqrt");
@@ -53,6 +50,22 @@ function replaceFormation(func) {
         }
     }
     func = text_array.join("");
+
+    for (let i = 0; i < text_array.length; i++) {
+        if (text_array[i] == "e" && i != text_array.length - 2) {
+            if (text_array[i + 1] != "x") {
+                if (text_array[i + 2] != "p") {
+                    func = func.substring(0, i) + "Math.E" + func.substring(i + 1);
+                }
+            }
+        }
+        else {
+            if (text_array[i] == "e") {
+                func = func.substring(0, i) + "Math.E" + func.substring(i + 1);
+            }
+        }
+    }
+    func = func.replaceAll("exp", "Math.exp");
 
     func = func.replaceAll("%an", "Math.tan");
     return func;
@@ -101,6 +114,7 @@ function placeMissingChars(func) {
             }
             operators.pop();
         }
+
         if (text_array[i] == "x" && i != text_array.length - 1) {
             for (let j = 0; j < numbers.length; j++) {
                 if (text_array[i + 1] == numbers[j]) {
@@ -232,7 +246,7 @@ function draw(calc_x, pos_x, pos_y, startY, y_axis, func, team, player, playersH
             }
             if (!cs_touched) {
                 explode(pos_x, pos_y);
-                deleteLine();
+                resetScreen(true);
                 rotatePlayerRound();
                 mirror_screen();
                 checkWin();
@@ -268,7 +282,7 @@ function draw(calc_x, pos_x, pos_y, startY, y_axis, func, team, player, playersH
         setTimeout(() => draw(calc_x, pos_x, pos_y, startY, y_axis, func, team, player, playersHit), 10);
     }
     else {
-        deleteLine();
+        resetScreen(true);
         rotatePlayerRound();
         mirror_screen();
         checkWin();
@@ -281,7 +295,7 @@ function explode(x, y) {
     sc.appendToList();
 }
 
-function deleteLine() {
+function resetScreen(withPlayers) {
 
     //ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -299,10 +313,11 @@ function deleteLine() {
     for (let i = 0; i < save_circles.length; i++) {
         save_circles[i].draw();
     }
-
-    for (let i = 0; i < players.length; i++) {
-        if (players[i].isDead == false) {
-            players[i].draw();
+    if (withPlayers) {
+        for (let i = 0; i < players.length; i++) {
+            if (players[i].isDead == false) {
+                players[i].draw();
+            }
         }
     }
 
