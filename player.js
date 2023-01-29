@@ -135,21 +135,23 @@ function startShooting(func) {
     idx = 0;
     img = new Image()
     img.src = "rcs/player_shooting.png"
-    img.onload = drawFrame(idx);
     sprite_width = 500;
     sprite_height = 223;
     sprite_offset_x = 148;
     sprite_offset_y = 94;
+    sprite_origin_y = 0;
+    img.onload = drawFrame(idx);
     function drawFrame(idx) {
-        src_newImg = idx * sprite_width;
+        src_newImg = idx * 500;
         resetScreen(false);
+        sprite_origin_x = idx*sprite_width;
+        ctx.drawImage(img, sprite_origin_x, sprite_origin_y, sprite_width, sprite_height, players[getCurrPlayerIdx()].x - sprite_offset_x, players[getCurrPlayerIdx()].y - sprite_offset_y, sprite_width, sprite_height)
+        idx++;
         for(let i = 0; i < players.length; i++) {
             if (players[i] != players[getCurrPlayerIdx()]) {
                 players[i].draw()
             }
         }
-        ctx.drawImage(img, idx*sprite_width, 0, sprite_width, sprite_height, players[getCurrPlayerIdx()].x - sprite_offset_x, players[getCurrPlayerIdx()].y - sprite_offset_y, sprite_width, sprite_height)
-        idx++;
         if (idx < 36) {
             setTimeout(() => drawFrame(idx), 30);
         }
