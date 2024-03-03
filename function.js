@@ -279,7 +279,7 @@ function draw(calc_x, pos_x, pos_y, startY, y_axis, func, team, player, playersH
         }
     }
     if (pos_x >= 0 && pos_x <= canvas.width && pos_y >= 0 && pos_y <= canvas.height) {
-        setTimeout(() => draw(calc_x, pos_x, pos_y, startY, y_axis, func, team, player, playersHit), 10);
+        setTimeout(() => draw(calc_x, pos_x, pos_y, startY, y_axis, func, team, player, playersHit), 12);
     }
     else {
         resetScreen(true);
