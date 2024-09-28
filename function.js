@@ -3,7 +3,6 @@ let trail_doc = document.getElementById("trail");
 let player_doc = document.getElementById("player");
 let func;
 let inputGraph = document.getElementById("inputGraph");
-//---
 
 
 function checkFunc(func) {
@@ -71,7 +70,6 @@ function replaceFormation(func) {
     return func;
 }
 
-//(3+x)*(2+x)
 function placeMissingChars(func) {
     let text_array = func.split("");
     let numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
@@ -129,7 +127,7 @@ function placeMissingChars(func) {
     return text_array.join("");
 }
 
-//d = 64px => r = 32px
+
 function checkBrackets(func) {
     let text_array = func.split("");
     let idx = 0;
@@ -266,7 +264,6 @@ function draw(calc_x, pos_x, pos_y, startY, y_axis, func, team, player, playersH
                     }
                 }
                 if (!alreadyHit) {
-                    //players[i].img = null;
                     playersHit.push(players[i]);
                     players[i].isDead = true;
                     ctx.fillStyle = "rgb(0, 49, 83)";
@@ -282,6 +279,7 @@ function draw(calc_x, pos_x, pos_y, startY, y_axis, func, team, player, playersH
         setTimeout(() => draw(calc_x, pos_x, pos_y, startY, y_axis, func, team, player, playersHit), 12);
     }
     else {
+        turnInProgress = false;
         resetScreen(true);
         rotatePlayerRound();
         mirror_screen();
@@ -296,9 +294,6 @@ function explode(x, y) {
 }
 
 function resetScreen(withPlayers) {
-
-    //ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     ctx.fillStyle = "rgb(0, 49, 83)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "black"
@@ -315,13 +310,11 @@ function resetScreen(withPlayers) {
     }
     if (withPlayers) {
         for (let i = 0; i < players.length; i++) {
-            if (players[i].isDead == false) {
-                players[i].draw();
-            }
+            players[i].draw();
         }
     }
-
 }
+
 
 
 /*

@@ -46,3 +46,11 @@ body {
     margin-bottom: auto;
     display: block;
 }
+
+#currentPlayerDisplay {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 24px;
+    color: white;
+    font-weight: bold;
+}

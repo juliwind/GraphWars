@@ -1,7 +1,12 @@
 let team1_size = 1;
 let team2_size = 1;
 
+const currentPlayerDisplay = document.getElementById("currentPlayerDisplay");
+
+
 initPlayers(team1_size, team2_size);
+resetScreen(true);
+updateCurrentPlayerDisplay();
 
 inputGraph.addEventListener("keypress", function (event) {
     if (event.key == "Enter") {
@@ -17,12 +22,22 @@ function submitFire() {
     startShooting(func);
 }
 
+
+
+function updateCurrentPlayerDisplay() {
+    const currPlayerIdx = getCurrPlayerIdx();
+    const currentPlayer = players[currPlayerIdx];
+
+    const playerNumber = currPlayerIdx + 1;
+
+    currentPlayerDisplay.textContent = `Aktueller Spieler: Spieler ${playerNumber}`;
+}
+
 function mirror_screen() {
     let mid = canvas.width / 2;
     let circles = getCircles();
     let players = getPlayers();
     let saveCircles = getSaveCircles();
-    //ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "rgb(0, 49, 83)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "black"
