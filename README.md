@@ -1,6 +1,6 @@
 # GraphWars
-
-![alt text](https://github.com/juliwind/GraphWars/blob/img/GW1.png?raw=true)
-![alt text](https://github.com/juliwind/GraphWars/img/GW1.png?raw=true)
- 
- ![Alt text](/img/GW1.png?raw=true)
+![Alt text](/img/GW1.png?raw=true)
+![Alt text](/img/GW2.png?raw=true)
+![Alt text](/img/GW3.png?raw=true)
+![Alt text](/img/GW4.png?raw=true)
+![Alt text](/img/GW5.png?raw=true)
